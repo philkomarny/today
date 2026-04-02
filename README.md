@@ -146,7 +146,7 @@ Each agent is a standalone markdown file in `commands/agents/`. The orchestrator
 
 ## Cost
 
-Each `/today` run uses roughly $2-4 of Claude API credits depending on how many sources are fetched and how much content is processed.
+Each `/today` run uses roughly $1-3 of Claude API credits depending on how many sources are fetched and how much content is processed.
 
 ## Credits
 
