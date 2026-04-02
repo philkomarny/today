@@ -1,0 +1,12 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(python3 daily-briefing/scripts/research_search.py)",
+      "Bash(python3 daily-briefing/scripts/outlook_calendar.py)",
+      "Bash(python3 daily-briefing/scripts/generate_social_images.py*)",
+      "Bash(python3 daily-briefing/scripts/post_intel_to_slack.py*)",
+      "Bash(bash daily-briefing/scripts/sync_dashboard.sh)",
+      "WebSearch"
+    ]
+  }
+}

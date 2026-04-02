@@ -1,0 +1,47 @@
+# Your Mission Configuration
+# This file defines YOUR domain, products, and strategic focus areas.
+# Every agent reads this to understand what's relevant to you.
+#
+# First-run setup populates this automatically, but you can edit anytime.
+# The self-update agent will reference these when scoring sources and trends.
+
+# Your domain — what industry or space are you in?
+domain: ""
+# Examples: "higher education", "fintech", "healthcare", "climate tech", "legal tech"
+
+# Your organization (optional — used in social post generation)
+organization: ""
+
+# Your role (optional — helps calibrate briefing depth)
+role: ""
+
+# Products or projects you're building
+# Each product gets tracked in the relevance index — intel and social trends
+# are scored for how directly they relate to these.
+products: []
+# Example:
+#   - name: "ProductName"
+#     slug: "product-name"        # used in tags and scoring
+#     description: "One-line description"
+#   - name: "AnotherProduct"
+#     slug: "another-product"
+#     description: "What it does"
+
+# Mission areas — broader strategic themes you care about
+# These map to tags in intel_sources.yaml and social_sources.yaml
+mission_areas: []
+# Example:
+#   - slug: "ai-safety"
+#     name: "AI Safety & Governance"
+#   - slug: "developer-tools"
+#     name: "Developer Tooling"
+#   - slug: "enterprise-adoption"
+#     name: "Enterprise AI Adoption"
+
+# Competitors or companies to watch closely
+watch_list: []
+# Example:
+#   - name: "CompetitorCo"
+#     why: "Direct competitor in our market segment"
+#   - name: "BigTechCo"
+#     why: "Entering our space with new product"

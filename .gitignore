@@ -1,0 +1,28 @@
+# Environment and secrets
+.env
+*.env.local
+
+# Output files (generated each run)
+output/.staging/*.json
+output/briefings/*.md
+output/social-posts/*.md
+output/images/*.png
+output/dashboard/*.html
+output/ops-log.md
+output/relevance-index.md
+output/wins/*.md
+output/weekend-plan-*.md
+
+# Research output
+research/digests/*.md
+research/.seen_papers.json
+
+# Script cache
+scripts/.calendar_events.json
+
+# macOS
+.DS_Store
+
+# Python
+__pycache__/
+*.pyc

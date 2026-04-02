@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script src="auth.js"></script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>How I AI</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;600;700&family=Fira+Sans:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,600;0,700;1,600&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg-primary: #0B0E1A;
+    --bg-card: #111827;
+    --border: #1E293B;
+    --text-primary: #E2E8F0;
+    --text-secondary: #94A3B8;
+    --text-muted: #64748B;
+    --blue-400: #60A5FA;
+    --blue-500: #3B82F6;
+    --purple-400: #A78BFA;
+    --purple-500: #8B5CF6;
+    --green-400: #4ADE80;
+    --red-400: #F87171;
+    --amber-400: #FBBF24;
+    --cyan-400: #22D3EE;
+    --gradient-blue-purple: linear-gradient(135deg, #3B82F6, #8B5CF6);
+  }
+
+  [data-theme="light"] {
+    --bg-primary: #F8FAFC;
+    --bg-card: #FFFFFF;
+    --border: #E2E8F0;
+    --text-primary: #1E293B;
+    --text-secondary: #475569;
+    --text-muted: #94A3B8;
+    --blue-400: #3B82F6;
+    --blue-500: #2563EB;
+    --purple-400: #8B5CF6;
+    --purple-500: #7C3AED;
+    --green-400: #22C55E;
+    --red-400: #EF4444;
+    --amber-400: #F59E0B;
+    --cyan-400: #06B6D4;
+    --gradient-blue-purple: linear-gradient(135deg, #2563EB, #7C3AED);
+  }
+
+  [data-theme="light"] body::before {
+    background: radial-gradient(ellipse, rgba(59,130,246,0.05) 0%, rgba(139,92,246,0.03) 40%, transparent 70%);
+  }
+
+  .theme-toggle {
+    position: fixed;
+    top: 1rem;
+    right: 1rem;
+    background: none;
+    border: 1px solid var(--text-muted);
+    border-radius: 50%;
+    width: 30px;
+    height: 30px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+    transition: border-color 0.2s, color 0.2s;
+    z-index: 10;
+  }
+
+  .theme-toggle:hover {
+    border-color: var(--blue-400);
+    color: var(--blue-400);
+  }
+
+  body {
+    font-family: 'Fira Sans', sans-serif;
+    background: var(--bg-primary);
+    color: var(--text-primary);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    overflow-x: hidden;
+    position: relative;
+  }
+
+  /* Ambient background glow */
+  body::before {
+    content: '';
+    position: absolute;
+    top: -30%;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 800px;
+    height: 800px;
+    background: radial-gradient(ellipse, rgba(59,130,246,0.07) 0%, rgba(139,92,246,0.04) 40%, transparent 70%);
+    pointer-events: none;
+  }
+
+  .landing {
+    text-align: center;
+    max-width: 720px;
+    padding: 2rem;
+    position: relative;
+    z-index: 1;
+  }
+
+  /* Version tag */
+  .version {
+    font-family: 'Fira Code', monospace;
+    font-size: 0.65rem;
+    color: var(--text-muted);
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    margin-bottom: 2rem;
+  }
+
+  .version span { color: var(--blue-400); }
+
+  /* Main title link */
+  .title-link {
+    display: block;
+    text-decoration: none;
+    margin-bottom: 3rem;
+    transition: transform 0.3s;
+  }
+
+  .title-link:hover {
+    transform: scale(1.02);
+  }
+
+  .title-link h1 {
+    font-family: 'Fira Code', monospace;
+    font-size: 3.2rem;
+    font-weight: 700;
+    background: var(--gradient-blue-purple);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    line-height: 1.15;
+    margin-bottom: 0.5rem;
+  }
+
+  .title-link .subtitle {
+    font-size: 1rem;
+    color: var(--text-muted);
+    font-weight: 400;
+    letter-spacing: 0.02em;
+  }
+
+  .title-link:hover .subtitle {
+    color: var(--text-secondary);
+  }
+
+  .title-link .arrow {
+    display: inline-block;
+    margin-left: 0.3rem;
+    transition: transform 0.3s;
+    color: var(--blue-400);
+  }
+
+  .title-link:hover .arrow {
+    transform: translateX(4px);
+  }
+
+  /* Stats grid */
+  .stats {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1px;
+    background: var(--border);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    overflow: hidden;
+    margin-bottom: 1.5rem;
+  }
+
+  .stat {
+    background: var(--bg-card);
+    padding: 1.25rem 1rem;
+    transition: background 0.2s;
+  }
+
+  .stat:hover {
+    background: #1a2235;
+  }
+
+  .stat-value {
+    font-family: 'Fira Code', monospace;
+    font-size: 1.6rem;
+    font-weight: 700;
+    line-height: 1;
+    margin-bottom: 0.3rem;
+  }
+
+  .stat-label {
+    font-size: 0.7rem;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    font-family: 'Fira Code', monospace;
+  }
+
+  .stat-sub {
+    font-size: 0.68rem;
+    color: var(--text-muted);
+    margin-top: 0.2rem;
+  }
+
+  .c-blue { color: var(--blue-400); }
+  .c-green { color: var(--green-400); }
+  .c-purple { color: var(--purple-400); }
+  .c-amber { color: var(--amber-400); }
+  .c-cyan { color: var(--cyan-400); }
+  .c-red { color: var(--red-400); }
+
+  /* Latest briefing quote */
+  .quote-block {
+    margin: 1.5rem 0 2rem;
+    padding: 1rem 1.5rem;
+    border-left: 2px solid var(--purple-400);
+    text-align: left;
+    color: var(--text-secondary);
+    font-family: 'Playfair Display', serif;
+    font-style: italic;
+    font-size: 0.88rem;
+    line-height: 1.7;
+    background: rgba(139, 92, 246, 0.04);
+    border-radius: 0 8px 8px 0;
+  }
+
+  .quote-block .attribution {
+    font-family: 'Fira Sans', sans-serif;
+    font-style: normal;
+    color: var(--text-muted);
+    font-size: 0.75rem;
+    margin-top: 0.4rem;
+  }
+
+  /* Quick links */
+  .quick-links {
+    display: flex;
+    justify-content: center;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+    margin-bottom: 3rem;
+  }
+
+  .quick-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.4rem 0.9rem;
+    border-radius: 999px;
+    font-family: 'Fira Code', monospace;
+    font-size: 0.72rem;
+    font-weight: 600;
+    text-decoration: none;
+    border: 1px solid var(--text-muted);
+    color: var(--text-secondary);
+    background: transparent;
+    transition: background 0.2s, color 0.2s, border-color 0.2s;
+  }
+
+  .quick-link:hover {
+    border-color: var(--blue-400);
+    color: var(--blue-400);
+    background: rgba(96, 165, 250, 0.08);
+  }
+
+  /* Last run timestamp */
+  .last-run {
+    font-family: 'Fira Code', monospace;
+    font-size: 0.68rem;
+    color: var(--text-muted);
+    margin-bottom: 3rem;
+  }
+
+  .last-run span { color: var(--text-secondary); }
+
+  /* Footer */
+  .footer {
+    position: absolute;
+    bottom: 1.5rem;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 0.7rem;
+    color: var(--text-muted);
+    letter-spacing: 0.02em;
+    white-space: nowrap;
+  }
+
+  @media (max-width: 600px) {
+    .title-link h1 { font-size: 2.2rem; }
+    .stats { grid-template-columns: repeat(2, 1fr); }
+    .landing { padding: 1.5rem; }
+  }
+</style>
+</head>
+<body>
+<button class="theme-toggle" id="theme-toggle" aria-label="Toggle theme"></button>
+
+
+<!-- DATA:START -->
+<!-- Stats, quote, and date are updated each /today run -->
+<!-- DATA:END -->
+
+<div class="footer">Powered by Get Your Own /today</div>
+
+<script>
+  const themeToggle = document.getElementById("theme-toggle");
+  function setTheme(t) {
+    document.documentElement.setAttribute("data-theme", t);
+    themeToggle.textContent = t === "dark" ? "☀" : "☾";
+    localStorage.setItem("theme", t);
+  }
+  setTheme(localStorage.getItem("theme") || "dark");
+  themeToggle.addEventListener("click", () => {
+    setTheme(document.documentElement.getAttribute("data-theme") === "dark" ? "light" : "dark");
+  });
+</script>
+</body>
+</html>

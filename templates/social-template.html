@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script src="auth.js"></script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Social Posts — April 1, 2026</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;600;700&family=Fira+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg-primary: #0B0E1A;
+    --bg-card: #111827;
+    --bg-card-hover: #1a2235;
+    --border: #1E293B;
+    --border-light: #2a3654;
+    --text-primary: #E2E8F0;
+    --text-secondary: #94A3B8;
+    --text-muted: #64748B;
+    --blue-400: #60A5FA;
+    --blue-500: #3B82F6;
+    --purple-400: #A78BFA;
+    --green-400: #4ADE80;
+    --red-400: #F87171;
+    --amber-400: #FBBF24;
+    --cyan-400: #22D3EE;
+    --linkedin: #0A66C2;
+    --x-color: #E2E8F0;
+    --gradient-blue-purple: linear-gradient(135deg, #3B82F6, #8B5CF6);
+  }
+
+  [data-theme="light"] {
+    --bg-primary: #F8FAFC;
+    --bg-card: #FFFFFF;
+    --bg-card-hover: #F1F5F9;
+    --border: #E2E8F0;
+    --border-light: #CBD5E1;
+    --text-primary: #1E293B;
+    --text-secondary: #475569;
+    --text-muted: #94A3B8;
+    --blue-400: #3B82F6;
+    --blue-500: #2563EB;
+    --purple-400: #8B5CF6;
+    --green-400: #22C55E;
+    --red-400: #EF4444;
+    --amber-400: #F59E0B;
+    --cyan-400: #06B6D4;
+    --linkedin: #0A66C2;
+    --x-color: #1E293B;
+    --gradient-blue-purple: linear-gradient(135deg, #2563EB, #7C3AED);
+  }
+
+  [data-theme="light"] .nav { background: rgba(248, 250, 252, 0.92); }
+  [data-theme="light"] .nav-menu { background: rgba(255, 255, 255, 0.98); }
+
+  .theme-toggle {
+    background: none; border: 1px solid var(--text-muted); border-radius: 50%;
+    width: 30px; height: 30px; cursor: pointer; display: flex; align-items: center;
+    justify-content: center; font-size: 0.85rem; color: var(--text-secondary);
+    transition: border-color 0.2s, color 0.2s;
+  }
+  .theme-toggle:hover { border-color: var(--blue-400); color: var(--blue-400); }
+
+  body {
+    font-family: 'Fira Sans', sans-serif; background: var(--bg-primary);
+    color: var(--text-primary); min-height: 100vh; line-height: 1.7;
+  }
+
+  /* NAV */
+  .nav {
+    position: sticky; top: 0; z-index: 100; background: rgba(11, 14, 26, 0.92);
+    backdrop-filter: blur(12px); border-bottom: 1px solid var(--border);
+    padding: 1rem 1.5rem; display: flex; align-items: center; justify-content: space-between;
+  }
+  .nav-page-title {
+    font-family: 'Fira Code', monospace; font-size: 1.4rem; font-weight: 700;
+    background: var(--gradient-blue-purple); -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent; background-clip: text;
+  }
+  .hamburger { display: flex; flex-direction: column; gap: 4px; cursor: pointer; padding: 0.4rem; border: none; background: none; z-index: 102; }
+  .hamburger span { display: block; width: 20px; height: 2px; background: var(--text-secondary); border-radius: 2px; transition: transform 0.3s, opacity 0.3s; }
+  .hamburger.open span:nth-child(1) { transform: rotate(45deg) translate(4px, 4px); }
+  .hamburger.open span:nth-child(2) { opacity: 0; }
+  .hamburger.open span:nth-child(3) { transform: rotate(-45deg) translate(4px, -4px); }
+  .nav-menu { display: none; position: fixed; top: 0; right: 0; width: 220px; height: 100vh; background: rgba(17, 24, 39, 0.98); border-left: 1px solid var(--border); padding: 4rem 1.5rem 2rem; z-index: 101; flex-direction: column; gap: 0.25rem; }
+  .nav-menu.open { display: flex; }
+  .nav-menu a { display: block; padding: 0.5rem 0.75rem; border-radius: 8px; font-family: 'Fira Code', monospace; font-size: 0.75rem; font-weight: 500; text-decoration: none; color: var(--text-secondary); transition: background 0.2s, color 0.2s; }
+  .nav-menu a:hover { background: rgba(96, 165, 250, 0.08); color: var(--blue-400); }
+  .nav-menu a.active { color: var(--blue-400); background: rgba(96, 165, 250, 0.12); }
+  .nav-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.4); z-index: 100; }
+  .nav-overlay.open { display: block; }
+
+  /* HEADER */
+  .page-header { text-align: center; padding: 3rem 2rem 2rem; }
+  .page-header h1 {
+    font-family: 'Fira Code', monospace; font-size: 1.6rem; font-weight: 700;
+    background: var(--gradient-blue-purple); -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent; background-clip: text; margin-bottom: 0.4rem;
+  }
+  .page-header .sub { color: var(--text-muted); font-size: 0.85rem; }
+  .page-header .sub span { color: var(--text-secondary); }
+
+  /* PLATFORM TABS */
+  .tabs { display: flex; justify-content: center; gap: 0.5rem; margin-bottom: 2.5rem; }
+  .tab {
+    padding: 0.5rem 1.5rem; border-radius: 999px; border: 1px solid var(--border);
+    background: transparent; color: var(--text-muted); font-family: 'Fira Code', monospace;
+    font-size: 0.75rem; font-weight: 600; cursor: pointer; transition: all 0.2s;
+  }
+  .tab:hover { color: var(--text-primary); border-color: var(--border-light); }
+  .tab.active-li { background: rgba(10, 102, 194, 0.15); border-color: var(--linkedin); color: var(--linkedin); }
+  .tab.active-x { background: rgba(226, 232, 240, 0.08); border-color: var(--text-secondary); color: var(--text-primary); }
+  .tab .count { font-size: 0.6rem; opacity: 0.6; margin-left: 0.3rem; }
+
+  /* CARD GRID */
+  .grid {
+    max-width: 1200px; margin: 0 auto; padding: 0 1.5rem 4rem;
+    display: grid; grid-template-columns: repeat(auto-fill, minmax(380px, 1fr)); gap: 1.25rem;
+  }
+
+  /* POST CARD */
+  .post-card {
+    background: var(--bg-card); border: 1px solid var(--border); border-radius: 14px;
+    overflow: hidden; display: flex; flex-direction: column; transition: border-color 0.2s, transform 0.15s;
+  }
+  .post-card:hover { border-color: var(--border-light); transform: translateY(-2px); }
+  .post-card.linkedin { border-top: 3px solid var(--linkedin); }
+  .post-card.x-post { border-top: 3px solid var(--text-secondary); }
+
+  .card-header {
+    display: flex; align-items: center; justify-content: space-between; padding: 1rem 1.25rem 0.5rem;
+  }
+  .card-id { font-family: 'Fira Code', monospace; font-size: 0.65rem; font-weight: 700; letter-spacing: 0.08em; }
+  .linkedin .card-id { color: var(--linkedin); }
+  .x-post .card-id { color: var(--text-secondary); }
+  .platform-icon { font-family: 'Fira Code', monospace; font-size: 0.6rem; font-weight: 700; padding: 0.15rem 0.5rem; border-radius: 999px; }
+  .linkedin .platform-icon { background: rgba(10, 102, 194, 0.15); color: var(--linkedin); }
+  .x-post .platform-icon { background: rgba(226, 232, 240, 0.08); color: var(--text-secondary); }
+
+  .card-title { padding: 0.25rem 1.25rem 0.6rem; font-weight: 700; font-size: 1rem; line-height: 1.35; color: var(--text-primary); }
+  .card-meta { padding: 0 1.25rem 0.6rem; font-size: 0.72rem; color: var(--text-muted); display: flex; flex-direction: column; gap: 0.2rem; }
+  .card-meta strong { color: var(--text-secondary); }
+
+  .card-body {
+    padding: 0 1.25rem; flex: 1; color: var(--text-secondary); font-size: 0.84rem;
+    line-height: 1.75; max-height: 280px; overflow-y: auto;
+    mask-image: linear-gradient(to bottom, black 85%, transparent 100%);
+    -webkit-mask-image: linear-gradient(to bottom, black 85%, transparent 100%);
+  }
+  .card-body.expanded { max-height: none; mask-image: none; -webkit-mask-image: none; }
+  .card-body p { margin-bottom: 0.75rem; }
+
+  .expand-toggle {
+    padding: 0.4rem 1.25rem; font-family: 'Fira Code', monospace; font-size: 0.65rem;
+    color: var(--text-muted); cursor: pointer; background: none; border: none;
+    text-align: left; transition: color 0.2s;
+  }
+  .expand-toggle:hover { color: var(--blue-400); }
+
+  .card-actions {
+    display: flex; gap: 0.5rem; padding: 1rem 1.25rem;
+    border-top: 1px solid var(--border); margin-top: auto;
+  }
+  .btn-post {
+    flex: 1; display: inline-flex; align-items: center; justify-content: center; gap: 0.4rem;
+    padding: 0.6rem 1rem; border-radius: 8px; font-family: 'Fira Code', monospace;
+    font-size: 0.72rem; font-weight: 700; text-decoration: none; border: none;
+    cursor: pointer; transition: opacity 0.2s, transform 0.1s; letter-spacing: 0.04em;
+  }
+  .btn-post:hover { opacity: 0.9; transform: scale(1.01); }
+  .btn-post:active { transform: scale(0.98); }
+  .btn-post.li-btn { background: var(--linkedin); color: #fff; }
+  .btn-post.x-btn { background: var(--text-primary); color: var(--bg-primary); }
+
+  .btn-copy {
+    display: inline-flex; align-items: center; justify-content: center;
+    padding: 0.6rem 0.8rem; border-radius: 8px; font-family: 'Fira Code', monospace;
+    font-size: 0.72rem; font-weight: 600; border: 1px solid var(--border);
+    background: transparent; color: var(--text-muted); cursor: pointer;
+    transition: border-color 0.2s, color 0.2s;
+  }
+  .btn-copy:hover { border-color: var(--blue-400); color: var(--blue-400); }
+  .btn-copy.copied { border-color: var(--green-400); color: var(--green-400); }
+
+  .btn-img {
+    display: inline-flex; align-items: center; justify-content: center;
+    padding: 0.6rem 0.8rem; border-radius: 8px; font-family: 'Fira Code', monospace;
+    font-size: 0.72rem; font-weight: 600; border: 1px solid var(--border);
+    background: linear-gradient(135deg, rgba(139,92,246,0.15), rgba(59,130,246,0.15));
+    color: var(--purple-400); cursor: pointer; text-decoration: none;
+    transition: border-color 0.2s, color 0.2s, background 0.2s;
+  }
+  .btn-img:hover { border-color: var(--purple-400); background: linear-gradient(135deg, rgba(139,92,246,0.25), rgba(59,130,246,0.25)); }
+  .btn-img:disabled { opacity: 0.5; cursor: wait; }
+
+  .card-image-wrap {
+    position: relative; width: 100%; background: var(--bg-primary);
+    border-bottom: 1px solid var(--border); overflow: hidden;
+  }
+  .card-image-wrap img {
+    display: block; width: 100%; height: auto; cursor: pointer;
+  }
+  .card-image-wrap .img-loading {
+    display: flex; align-items: center; justify-content: center; gap: 0.5rem;
+    padding: 2rem; font-family: 'Fira Code', monospace; font-size: 0.75rem;
+    color: var(--purple-400);
+  }
+  .card-image-wrap .img-loading .spinner {
+    width: 16px; height: 16px; border: 2px solid var(--border);
+    border-top-color: var(--purple-400); border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+  .card-image-wrap .img-actions {
+    position: absolute; bottom: 0.5rem; right: 0.5rem; display: flex; gap: 0.35rem;
+  }
+  .card-image-wrap .img-action-btn {
+    font-family: 'Fira Code', monospace; font-size: 0.6rem; font-weight: 600;
+    padding: 0.3rem 0.6rem; border-radius: 6px; border: 1px solid rgba(255,255,255,0.2);
+    background: rgba(0,0,0,0.6); color: #fff; cursor: pointer; backdrop-filter: blur(4px);
+    transition: background 0.2s;
+  }
+  .card-image-wrap .img-action-btn:hover { background: rgba(0,0,0,0.8); }
+
+  /* STATS BAR */
+  .stats-bar { display: flex; justify-content: center; gap: 2rem; padding: 1rem 2rem; margin-bottom: 1rem; }
+  .stat-item { text-align: center; }
+  .stat-item .val { font-family: 'Fira Code', monospace; font-size: 1.2rem; font-weight: 700; }
+  .stat-item .lbl { font-size: 0.62rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.08em; font-family: 'Fira Code', monospace; }
+
+  /* TREND PULSE */
+  .trend-pulse {
+    max-width: 800px; margin: 0 auto 2rem; padding: 1.25rem 1.5rem;
+    background: var(--bg-card); border: 1px solid var(--border); border-radius: 12px;
+    border-left: 3px solid var(--amber-400);
+  }
+  .trend-pulse-label {
+    font-family: 'Fira Code', monospace; font-size: 0.65rem; font-weight: 700;
+    color: var(--amber-400); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 0.5rem;
+  }
+  .trend-pulse-text { color: var(--text-secondary); font-size: 0.84rem; line-height: 1.7; }
+
+  /* FOOTER */
+  .page-footer { text-align: center; padding: 2rem; border-top: 1px solid var(--border); font-size: 0.7rem; color: var(--text-muted); }
+
+  @media (max-width: 700px) {
+    .grid { grid-template-columns: 1fr; padding: 0 1rem 3rem; }
+    .stats-bar { gap: 1rem; }
+    .trend-pulse { margin: 0 1rem 2rem; }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav class="nav">
+  <div class="nav-page-title">Social Posts</div>
+  <div style="display:flex;align-items:center;gap:0.5rem;">
+    <button class="theme-toggle" id="theme-toggle" aria-label="Toggle theme"></button>
+    <button class="hamburger" id="hamburger" aria-label="Menu">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</nav>
+<div class="nav-overlay" id="nav-overlay"></div>
+<div class="nav-menu" id="nav-menu">
+  <a href="landing.html">Home</a>
+  <a href="briefing.html">/today</a>
+  <a href="dashboard.html">Dashboard</a>
+  <a href="network.html">Network</a>
+  <a href="social.html" class="active">Social</a>
+  <a href="updates.html">Updates</a>
+  <a href="system-diagram.html">System</a>
+</div>
+<script>
+  const hamburger = document.getElementById('hamburger');
+  const navMenu = document.getElementById('nav-menu');
+  const navOverlay = document.getElementById('nav-overlay');
+  hamburger.addEventListener('click', () => { hamburger.classList.toggle('open'); navMenu.classList.toggle('open'); navOverlay.classList.toggle('open'); });
+  navOverlay.addEventListener('click', () => { hamburger.classList.remove('open'); navMenu.classList.remove('open'); navOverlay.classList.remove('open'); });
+  const themeToggle = document.getElementById('theme-toggle');
+  function setTheme(t) { document.documentElement.setAttribute('data-theme', t); themeToggle.textContent = t === 'dark' ? '\u2600' : '\u263E'; localStorage.setItem('theme', t); }
+  setTheme(localStorage.getItem('theme') || 'dark');
+  themeToggle.addEventListener('click', () => { setTheme(document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark'); });
+</script>
+
+<!-- DATA:START -->
+<!-- This section is regenerated each /today run from staging JSONs -->
+<!-- DATA:END -->
+
+</body>
+</html>

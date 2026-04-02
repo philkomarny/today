@@ -1,0 +1,21 @@
+# Briefing assembly preferences
+# Self-updated by the self-update agent based on usage patterns
+
+section_order:
+  - sitrep
+  - schedule
+  - focus
+  - intel
+  - social
+  - legal
+  - research
+
+section_depth:
+  intel: full         # full | summary
+  social: full        # full | summary
+  legal: compact      # full | compact (compact = case cards only)
+  research: curated   # full | curated (curated = only relevant papers)
+
+quote_style: blockquote   # blockquote | inline
+include_inspiration_image: true
+include_dashboard_links: true

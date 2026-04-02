@@ -1,0 +1,885 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script src="auth.js"></script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Intelligence Network Graph</title>
+<script src="https://cdn.jsdelivr.net/npm/d3@7.9.0/dist/d3.min.js"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;600;700&family=Fira+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg-primary: #0B0E1A;
+    --bg-card: #111827;
+    --bg-card-hover: #1a2235;
+    --border: #1E293B;
+    --text-primary: #E2E8F0;
+    --text-secondary: #94A3B8;
+    --text-muted: #64748B;
+    --blue-400: #60A5FA;
+    --blue-500: #3B82F6;
+    --purple-400: #A78BFA;
+    --purple-500: #8B5CF6;
+    --green-400: #4ADE80;
+    --red-400: #F87171;
+    --amber-400: #FBBF24;
+    --cyan-400: #22D3EE;
+    --pink-400: #F472B6;
+    --orange-400: #FB923C;
+    --gradient-blue-purple: linear-gradient(135deg, #3B82F6, #8B5CF6);
+    --gradient-bg: linear-gradient(180deg, #0B0E1A 0%, #111236 100%);
+  }
+
+  [data-theme="light"] {
+    --bg-primary: #F8FAFC;
+    --bg-card: #FFFFFF;
+    --bg-card-hover: #F1F5F9;
+    --border: #E2E8F0;
+    --text-primary: #1E293B;
+    --text-secondary: #475569;
+    --text-muted: #94A3B8;
+    --blue-400: #3B82F6;
+    --blue-500: #2563EB;
+    --purple-400: #8B5CF6;
+    --purple-500: #7C3AED;
+    --green-400: #22C55E;
+    --red-400: #EF4444;
+    --amber-400: #F59E0B;
+    --cyan-400: #06B6D4;
+    --pink-400: #EC4899;
+    --orange-400: #F97316;
+    --gradient-blue-purple: linear-gradient(135deg, #2563EB, #7C3AED);
+    --gradient-bg: linear-gradient(180deg, #F8FAFC 0%, #EFF6FF 100%);
+  }
+
+  [data-theme="light"] .nav-bar {
+    background: var(--bg-primary);
+  }
+
+  [data-theme="light"] .nav-menu {
+    background: rgba(255, 255, 255, 0.98);
+  }
+
+  .theme-toggle {
+    background: none;
+    border: 1px solid var(--text-muted);
+    border-radius: 50%;
+    width: 30px;
+    height: 30px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+    transition: border-color 0.2s, color 0.2s;
+  }
+
+  .theme-toggle:hover {
+    border-color: var(--blue-400);
+    color: var(--blue-400);
+  }
+
+  body {
+    font-family: 'Fira Sans', sans-serif;
+    background: var(--bg-primary);
+    color: var(--text-primary);
+    min-height: 100vh;
+    overflow: hidden;
+  }
+
+  .page {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+  }
+
+  /* NAV */
+  .nav-bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1rem 1.5rem;
+    border-bottom: 1px solid var(--border);
+    flex-shrink: 0;
+    z-index: 100;
+    background: var(--bg-primary);
+  }
+
+  .nav-page-title {
+    font-family: 'Fira Code', monospace;
+    font-size: 1.4rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    background: var(--gradient-blue-purple);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .hamburger {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    cursor: pointer;
+    padding: 0.4rem;
+    border: none;
+    background: none;
+    z-index: 102;
+  }
+
+  .hamburger span {
+    display: block;
+    width: 20px;
+    height: 2px;
+    background: var(--text-secondary);
+    border-radius: 2px;
+    transition: transform 0.3s, opacity 0.3s;
+  }
+
+  .hamburger.open span:nth-child(1) {
+    transform: rotate(45deg) translate(4px, 4px);
+  }
+  .hamburger.open span:nth-child(2) {
+    opacity: 0;
+  }
+  .hamburger.open span:nth-child(3) {
+    transform: rotate(-45deg) translate(4px, -4px);
+  }
+
+  .nav-menu {
+    display: none;
+    position: fixed;
+    top: 0;
+    right: 0;
+    width: 220px;
+    height: 100vh;
+    background: rgba(17, 24, 39, 0.98);
+    border-left: 1px solid var(--border);
+    padding: 4rem 1.5rem 2rem;
+    z-index: 101;
+    flex-direction: column;
+    gap: 0.25rem;
+  }
+
+  .nav-menu.open {
+    display: flex;
+  }
+
+  .nav-menu a {
+    display: block;
+    padding: 0.5rem 0.75rem;
+    border-radius: 8px;
+    font-family: 'Fira Code', monospace;
+    font-size: 0.75rem;
+    font-weight: 500;
+    text-decoration: none;
+    color: var(--text-secondary);
+    transition: background 0.2s, color 0.2s;
+  }
+
+  .nav-menu a:hover {
+    background: rgba(96, 165, 250, 0.08);
+    color: var(--blue-400);
+  }
+
+  .nav-menu a.active {
+    color: var(--blue-400);
+    background: rgba(96, 165, 250, 0.12);
+  }
+
+  .nav-overlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.4);
+    z-index: 100;
+  }
+
+  .nav-overlay.open {
+    display: block;
+  }
+
+  /* Graph Container */
+  .graph-container {
+    flex: 1;
+    position: relative;
+    overflow: hidden;
+  }
+
+  svg {
+    width: 100%;
+    height: 100%;
+    cursor: grab;
+  }
+
+  svg:active { cursor: grabbing; }
+
+  /* Tooltip */
+  .tooltip {
+    position: absolute;
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 1rem;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.15s;
+    z-index: 100;
+    max-width: 320px;
+    font-size: 0.82rem;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.5);
+  }
+
+  .tooltip.visible { opacity: 1; }
+
+  .tooltip h3 {
+    font-family: 'Fira Code', monospace;
+    font-size: 0.85rem;
+    font-weight: 600;
+    margin-bottom: 0.4rem;
+  }
+
+  .tooltip .type-badge {
+    display: inline-block;
+    padding: 0.1rem 0.45rem;
+    border-radius: 999px;
+    font-size: 0.6rem;
+    font-family: 'Fira Code', monospace;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+  }
+
+  .tooltip .stat-row {
+    display: flex;
+    justify-content: space-between;
+    padding: 0.2rem 0;
+    border-bottom: 1px solid rgba(30,41,59,0.5);
+    color: var(--text-secondary);
+  }
+
+  .tooltip .stat-label { color: var(--text-muted); }
+  .tooltip .stat-value { font-family: 'Fira Code', monospace; font-weight: 500; }
+
+  .tooltip .platforms {
+    display: flex;
+    gap: 0.3rem;
+    flex-wrap: wrap;
+    margin-top: 0.4rem;
+  }
+
+  .tooltip .platform-tag {
+    padding: 0.1rem 0.4rem;
+    border-radius: 999px;
+    font-size: 0.6rem;
+    font-family: 'Fira Code', monospace;
+    font-weight: 500;
+  }
+
+  .tooltip .products-fed {
+    margin-top: 0.4rem;
+    display: flex;
+    gap: 0.25rem;
+    flex-wrap: wrap;
+  }
+
+  .tooltip .product-tag {
+    padding: 0.1rem 0.4rem;
+    border-radius: 999px;
+    font-size: 0.6rem;
+    font-family: 'Fira Code', monospace;
+    font-weight: 500;
+    background: rgba(139, 92, 246, 0.15);
+    color: var(--purple-400);
+  }
+
+  /* Legend */
+  .legend {
+    position: absolute;
+    bottom: 1rem;
+    left: 1rem;
+    background: rgba(17, 24, 39, 0.92);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 0.75rem 1rem;
+    z-index: 10;
+    font-size: 0.72rem;
+  }
+
+  .legend h4 {
+    font-family: 'Fira Code', monospace;
+    font-size: 0.7rem;
+    color: var(--text-muted);
+    margin-bottom: 0.5rem;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+  }
+
+  .legend-row {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-bottom: 0.3rem;
+    color: var(--text-secondary);
+  }
+
+  .legend-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+
+  .legend-line {
+    width: 20px;
+    height: 2px;
+    flex-shrink: 0;
+  }
+
+  /* Controls */
+  .controls {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+    z-index: 10;
+  }
+
+  .control-btn {
+    width: 36px;
+    height: 36px;
+    border-radius: 8px;
+    border: 1px solid var(--border);
+    background: var(--bg-card);
+    color: var(--text-secondary);
+    font-family: 'Fira Code', monospace;
+    font-size: 1rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: border-color 0.2s, color 0.2s;
+  }
+
+  .control-btn:hover {
+    border-color: var(--blue-400);
+    color: var(--blue-400);
+  }
+
+  /* Filter bar */
+  .filter-bar {
+    position: absolute;
+    top: 1rem;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    gap: 0.4rem;
+    z-index: 10;
+    background: rgba(17, 24, 39, 0.92);
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    padding: 0.3rem;
+  }
+
+  .filter-btn {
+    padding: 0.3rem 0.7rem;
+    border-radius: 999px;
+    border: none;
+    background: transparent;
+    color: var(--text-muted);
+    font-family: 'Fira Code', monospace;
+    font-size: 0.68rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background 0.2s, color 0.2s;
+  }
+
+  .filter-btn:hover { color: var(--text-primary); }
+
+  .filter-btn.active {
+    background: rgba(96, 165, 250, 0.2);
+    color: var(--blue-400);
+  }
+
+  /* Footer */
+  .footer {
+    padding: 0.5rem 1.5rem;
+    border-top: 1px solid var(--border);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 0.65rem;
+    color: var(--text-muted);
+    font-family: 'Fira Code', monospace;
+    flex-shrink: 0;
+    background: var(--bg-primary);
+  }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <nav class="nav-bar">
+    <div class="nav-page-title">Intelligence Network <span style="color:var(--text-muted);font-size:0.65rem;font-weight:400;margin-left:0.5rem;"><span id="node-count">0</span> nodes &middot; <span id="edge-count">0</span> connections</span></div>
+    <div style="display:flex;align-items:center;gap:0.5rem;">
+      <button class="theme-toggle" id="theme-toggle" aria-label="Toggle theme"></button>
+      <button class="hamburger" id="hamburger" aria-label="Menu">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </nav>
+  <div class="nav-overlay" id="nav-overlay"></div>
+  <div class="nav-menu" id="nav-menu">
+    <a href="landing.html">Home</a>
+    <a href="briefing.html">Today</a>
+    <a href="dashboard.html">Dashboard</a>
+    <a href="network.html" class="active">Network</a>
+    <a href="social.html">Social</a>
+  <a href="updates.html">Updates</a>
+  <a href="system-diagram.html">System</a>
+  </div>
+  <script>
+    const hamburger = document.getElementById('hamburger');
+    const navMenu = document.getElementById('nav-menu');
+    const navOverlay = document.getElementById('nav-overlay');
+    hamburger.addEventListener('click', () => {
+      hamburger.classList.toggle('open');
+      navMenu.classList.toggle('open');
+      navOverlay.classList.toggle('open');
+    });
+    navOverlay.addEventListener('click', () => {
+      hamburger.classList.remove('open');
+      navMenu.classList.remove('open');
+      navOverlay.classList.remove('open');
+    });
+
+  // Theme toggle
+  const themeToggle = document.getElementById('theme-toggle');
+  function setTheme(t) {
+    document.documentElement.setAttribute('data-theme', t);
+    themeToggle.textContent = t === 'dark' ? '\u2600' : '\u263E';
+    localStorage.setItem('theme', t);
+  }
+  setTheme(localStorage.getItem('theme') || 'dark');
+  themeToggle.addEventListener('click', () => {
+    setTheme(document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark');
+  });
+  </script>
+
+  <div class="graph-container" id="graph-container">
+    <svg id="graph"></svg>
+
+    <div class="tooltip" id="tooltip"></div>
+
+    <div class="filter-bar">
+      <button class="filter-btn active" data-filter="all">All</button>
+      <button class="filter-btn" data-filter="influencer">Influencers</button>
+      <button class="filter-btn" data-filter="company">Companies</button>
+      <button class="filter-btn" data-filter="product">Products</button>
+      <button class="filter-btn" data-filter="community">Communities</button>
+      <button class="filter-btn" data-filter="publication">Publications</button>
+    </div>
+
+    <div class="controls">
+      <button class="control-btn" id="zoom-in" title="Zoom in">+</button>
+      <button class="control-btn" id="zoom-out" title="Zoom out">&minus;</button>
+      <button class="control-btn" id="zoom-reset" title="Reset view">&#8634;</button>
+    </div>
+
+    <div class="legend">
+      <h4>Node Types</h4>
+      <div class="legend-row"><span class="legend-dot" style="background: #60A5FA;"></span> Influencer</div>
+      <div class="legend-row"><span class="legend-dot" style="background: #4ADE80;"></span> Company</div>
+      <div class="legend-row"><span class="legend-dot" style="background: #A78BFA;"></span> Product</div>
+      <div class="legend-row"><span class="legend-dot" style="background: #FB923C;"></span> Community</div>
+      <div class="legend-row"><span class="legend-dot" style="background: #22D3EE;"></span> Publication</div>
+      <h4 style="margin-top: 0.6rem;">Edges</h4>
+      <div class="legend-row"><span class="legend-line" style="background: var(--purple-400);"></span> Feeds product</div>
+      <div class="legend-row"><span class="legend-line" style="background: var(--amber-400);"></span> Referred by</div>
+      <div class="legend-row"><span class="legend-line" style="background: rgba(96,165,250,0.3);"></span> Shared platform</div>
+      <h4 style="margin-top: 0.6rem;">Size</h4>
+      <div class="legend-row" style="gap: 0.3rem;">
+        <span class="legend-dot" style="background: var(--text-muted); width: 6px; height: 6px;"></span>
+        <span class="legend-dot" style="background: var(--text-muted); width: 12px; height: 12px;"></span>
+        <span class="legend-dot" style="background: var(--text-muted); width: 18px; height: 18px;"></span>
+        <span style="margin-left: 0.2rem;">= Relevance score</span>
+      </div>
+      <h4 style="margin-top: 0.6rem;">Interaction</h4>
+      <div class="legend-row" style="font-size: 0.65rem;">Click node to pin/unpin</div>
+    </div>
+  </div>
+
+  <div class="footer">
+    <span>Powered by Get Your Own /today</span>
+    <span>Last Updated: 2026-03-31</span>
+  </div>
+
+</div>
+
+
+<script>
+// ══════════════════════════════════════════════════════
+// NETWORK DATA — auto-generated from social_sources.yaml
+// and relevance_index.yaml
+// <!-- DATA:START -->
+// Nodes and links arrays are regenerated each run.
+// New nodes/links are ADDED, existing ones UPDATED with latest scores.
+// <!-- DATA:END -->
+// ══════════════════════════════════════════════════════
+
+const nodes = [];
+const links = [];
+
+// ══════════════════════════════════════════════════════
+// COLOR & SIZE SCALES
+// ══════════════════════════════════════════════════════
+
+const typeColors = {
+  influencer: "#60A5FA",
+  company: "#4ADE80",
+  product: "#A78BFA",
+  community: "#FB923C",
+  publication: "#22D3EE",
+};
+
+const edgeColors = {
+  product: "#A78BFA",
+  referral: "#FBBF24",
+  platform: "rgba(96,165,250,0.3)",
+  thematic: "rgba(148,163,184,0.2)",
+};
+
+function nodeRadius(d) {
+  if (d.type === "product") return Math.max(18, Math.min(35, 10 + d.hits * 1.2));
+  if (d.score <= 0) return 6;
+  return Math.max(8, Math.min(28, 6 + d.score * 1.5));
+}
+
+function nodeOpacity(d) {
+  if (d.type === "product") return 1;
+  if (d.status === "silent" || d.status === "watching") return 0.35;
+  if (d.status === "new") return 0.6;
+  if (d.score === 0) return 0.45;
+  return 0.9;
+}
+
+// ══════════════════════════════════════════════════════
+// BUILD THE GRAPH
+// ══════════════════════════════════════════════════════
+
+const container = document.getElementById("graph-container");
+const width = container.clientWidth;
+const height = container.clientHeight;
+
+const svg = d3.select("#graph")
+  .attr("viewBox", [0, 0, width, height]);
+
+// Defs for glow
+const defs = svg.append("defs");
+
+// Glow filter
+const filter = defs.append("filter").attr("id", "glow");
+filter.append("feGaussianBlur").attr("stdDeviation", "3").attr("result", "blur");
+const merge = filter.append("feMerge");
+merge.append("feMergeNode").attr("in", "blur");
+merge.append("feMergeNode").attr("in", "SourceGraphic");
+
+// Arrow markers for directed edges
+["product", "referral"].forEach(type => {
+  defs.append("marker")
+    .attr("id", `arrow-${type}`)
+    .attr("viewBox", "0 -3 6 6")
+    .attr("refX", 20)
+    .attr("refY", 0)
+    .attr("markerWidth", 5)
+    .attr("markerHeight", 5)
+    .attr("orient", "auto")
+    .append("path")
+    .attr("d", "M0,-3L6,0L0,3")
+    .attr("fill", edgeColors[type]);
+});
+
+const g = svg.append("g");
+
+// Zoom
+const zoom = d3.zoom()
+  .scaleExtent([0.2, 4])
+  .on("zoom", (e) => g.attr("transform", e.transform));
+
+svg.call(zoom);
+
+// Zoom controls
+document.getElementById("zoom-in").onclick = () => svg.transition().duration(300).call(zoom.scaleBy, 1.4);
+document.getElementById("zoom-out").onclick = () => svg.transition().duration(300).call(zoom.scaleBy, 0.7);
+document.getElementById("zoom-reset").onclick = () => svg.transition().duration(500).call(zoom.transform, d3.zoomIdentity.translate(width/2, height/2).scale(0.8).translate(-width/2, -height/2));
+
+// Simulation
+const simulation = d3.forceSimulation(nodes)
+  .force("link", d3.forceLink(links).id(d => d.id).distance(d => {
+    if (d.type === "product") return 120;
+    if (d.type === "referral") return 100;
+    if (d.type === "thematic") return 150;
+    return 180;
+  }).strength(d => {
+    if (d.type === "product" && d.weight > 0) return 0.4;
+    if (d.type === "referral") return 0.3;
+    if (d.type === "thematic") return 0.15;
+    return 0.1;
+  }))
+  .force("charge", d3.forceManyBody().strength(d => {
+    if (d.type === "product") return -300;
+    if (d.score > 5) return -200;
+    return -100;
+  }))
+  .force("center", d3.forceCenter(width / 2, height / 2))
+  .force("collision", d3.forceCollide().radius(d => nodeRadius(d) + 8))
+  .force("x", d3.forceX(width / 2).strength(0.03))
+  .force("y", d3.forceY(height / 2).strength(0.03));
+
+// Draw edges
+const link = g.append("g")
+  .selectAll("line")
+  .data(links)
+  .join("line")
+  .attr("stroke", d => edgeColors[d.type] || "rgba(148,163,184,0.15)")
+  .attr("stroke-width", d => {
+    if (d.type === "product" && d.weight > 0) return 1.5 + d.weight * 0.5;
+    if (d.type === "referral") return 2;
+    return 1;
+  })
+  .attr("stroke-dasharray", d => d.type === "thematic" ? "4,4" : null)
+  .attr("marker-end", d => (d.type === "product" && d.weight > 0) ? `url(#arrow-product)` : d.type === "referral" ? `url(#arrow-referral)` : null)
+  .attr("opacity", d => {
+    if (d.type === "product" && d.weight > 0) return 0.7;
+    if (d.type === "referral") return 0.8;
+    return 0.3;
+  });
+
+// Draw nodes
+const node = g.append("g")
+  .selectAll("g")
+  .data(nodes)
+  .join("g")
+  .attr("cursor", "pointer")
+  .call(d3.drag()
+    .on("start", (e, d) => { if (!e.active) simulation.alphaTarget(0.3).restart(); d.fx = d.x; d.fy = d.y; })
+    .on("drag", (e, d) => { d.fx = e.x; d.fy = e.y; })
+    .on("end", (e, d) => {
+      if (!e.active) simulation.alphaTarget(0);
+      // If not pinned, release
+      if (!d.pinned) { d.fx = null; d.fy = null; }
+    })
+  );
+
+// Click to pin/unpin
+node.on("click", (e, d) => {
+  e.stopPropagation();
+  d.pinned = !d.pinned;
+  if (d.pinned) {
+    d.fx = d.x;
+    d.fy = d.y;
+  } else {
+    d.fx = null;
+    d.fy = null;
+  }
+  // Visual indicator for pinned state
+  node.select("circle")
+    .attr("stroke", n => n.pinned ? "#FBBF24" : n.status === "gap" ? "#F87171" : "none")
+    .attr("stroke-width", n => n.pinned ? 2.5 : n.status === "gap" ? 2 : 0)
+    .attr("stroke-dasharray", n => n.pinned ? null : n.status === "gap" ? "4,3" : null);
+});
+
+// Node circles
+node.append("circle")
+  .attr("r", nodeRadius)
+  .attr("fill", d => typeColors[d.type] || "#64748B")
+  .attr("opacity", nodeOpacity)
+  .attr("stroke", d => d.status === "gap" ? "#F87171" : "none")
+  .attr("stroke-width", d => d.status === "gap" ? 2 : 0)
+  .attr("stroke-dasharray", d => d.status === "gap" ? "4,3" : null)
+  .attr("filter", d => d.score > 5 ? "url(#glow)" : null);
+
+// Node labels
+node.append("text")
+  .text(d => d.id)
+  .attr("dy", d => nodeRadius(d) + 14)
+  .attr("text-anchor", "middle")
+  .attr("font-family", "'Fira Code', monospace")
+  .attr("font-size", d => d.type === "product" ? "0.7rem" : d.score > 3 ? "0.65rem" : "0.55rem")
+  .attr("font-weight", d => d.type === "product" ? 700 : d.score > 5 ? 600 : 400)
+  .attr("fill", d => d.type === "product" ? typeColors.product : d.status === "silent" || d.status === "watching" ? "rgba(148,163,184,0.4)" : "var(--text-secondary)")
+  .attr("pointer-events", "none");
+
+// Score labels on high-score nodes
+node.filter(d => d.score > 0 && d.type !== "product")
+  .append("text")
+  .text(d => d.score.toFixed(1))
+  .attr("text-anchor", "middle")
+  .attr("dy", "0.35em")
+  .attr("font-family", "'Fira Code', monospace")
+  .attr("font-size", "0.55rem")
+  .attr("font-weight", 700)
+  .attr("fill", "var(--bg-primary)")
+  .attr("pointer-events", "none");
+
+// Product hit counts
+node.filter(d => d.type === "product")
+  .append("text")
+  .text(d => d.hits)
+  .attr("text-anchor", "middle")
+  .attr("dy", "0.35em")
+  .attr("font-family", "'Fira Code', monospace")
+  .attr("font-size", "0.8rem")
+  .attr("font-weight", 700)
+  .attr("fill", "var(--bg-primary)")
+  .attr("pointer-events", "none");
+
+// Update counts
+document.getElementById("node-count").textContent = nodes.length;
+document.getElementById("edge-count").textContent = links.length;
+
+// Tick
+simulation.on("tick", () => {
+  link
+    .attr("x1", d => d.source.x)
+    .attr("y1", d => d.source.y)
+    .attr("x2", d => d.target.x)
+    .attr("y2", d => d.target.y);
+
+  node.attr("transform", d => `translate(${d.x},${d.y})`);
+});
+
+// ══════════════════════════════════════════════════════
+// TOOLTIP
+// ══════════════════════════════════════════════════════
+
+const tooltip = document.getElementById("tooltip");
+const platformColors = {
+  linkedin: { bg: "rgba(96,165,250,0.15)", color: "#60A5FA" },
+  x: { bg: "rgba(148,163,184,0.15)", color: "#94A3B8" },
+  youtube: { bg: "rgba(248,113,113,0.15)", color: "#F87171" },
+  substack: { bg: "rgba(251,191,36,0.15)", color: "#FBBF24" },
+  reddit: { bg: "rgba(251,146,60,0.15)", color: "#FB923C" },
+  tiktok: { bg: "rgba(34,211,238,0.15)", color: "#22D3EE" },
+};
+
+node.on("mouseover", (e, d) => {
+  const typeBadgeColor = typeColors[d.type] || "#64748B";
+
+  let html = `<h3 style="color: ${typeBadgeColor}">${d.id}</h3>`;
+  html += `<span class="type-badge" style="background: ${typeBadgeColor}22; color: ${typeBadgeColor}">${d.type}</span>`;
+
+  if (d.focus) html += `<p style="color: var(--text-muted); font-size: 0.75rem; margin-bottom: 0.5rem;">${d.focus}</p>`;
+
+  if (d.type !== "product") {
+    if (d.score !== undefined) html += `<div class="stat-row"><span class="stat-label">Score</span><span class="stat-value" style="color: ${typeBadgeColor}">${d.score.toFixed(1)}</span></div>`;
+    if (d.hitRate !== undefined) html += `<div class="stat-row"><span class="stat-label">Hit Rate</span><span class="stat-value">${d.hitRate > 0 ? (d.hitRate * 100).toFixed(0) + '%' : '\u2014'}</span></div>`;
+    if (d.hits !== undefined) html += `<div class="stat-row"><span class="stat-label">Hits</span><span class="stat-value">${d.hits}</span></div>`;
+    if (d.streak !== undefined && d.streak > 0) html += `<div class="stat-row"><span class="stat-label">Streak</span><span class="stat-value">${d.streak} days</span></div>`;
+    if (d.highImpact) html += `<div class="stat-row"><span class="stat-label">High Impact</span><span class="stat-value">${d.highImpact}</span></div>`;
+  } else {
+    html += `<div class="stat-row"><span class="stat-label">Total Hits</span><span class="stat-value" style="color: ${typeBadgeColor}">${d.hits}</span></div>`;
+  }
+
+  if (d.platforms && d.platforms.length > 0) {
+    html += '<div class="platforms">';
+    d.platforms.forEach(p => {
+      const pc = platformColors[p] || { bg: "rgba(148,163,184,0.15)", color: "#94A3B8" };
+      html += `<span class="platform-tag" style="background: ${pc.bg}; color: ${pc.color}">${p}</span>`;
+    });
+    html += '</div>';
+  }
+
+  if (d.products && Object.keys(d.products).length > 0) {
+    html += '<div class="products-fed">';
+    Object.entries(d.products).sort((a,b) => b[1] - a[1]).forEach(([prod, count]) => {
+      html += `<span class="product-tag">${prod.replace(/_/g, ' ')} (${count})</span>`;
+    });
+    html += '</div>';
+  }
+
+  tooltip.innerHTML = html;
+  tooltip.classList.add("visible");
+
+  // Highlight connected
+  const connectedIds = new Set();
+  connectedIds.add(d.id);
+  links.forEach(l => {
+    const sid = typeof l.source === 'object' ? l.source.id : l.source;
+    const tid = typeof l.target === 'object' ? l.target.id : l.target;
+    if (sid === d.id) connectedIds.add(tid);
+    if (tid === d.id) connectedIds.add(sid);
+  });
+
+  node.select("circle").attr("opacity", n => connectedIds.has(n.id) ? 1 : 0.08);
+  node.selectAll("text").attr("opacity", n => connectedIds.has(n.id) ? 1 : 0.08);
+  link.attr("opacity", l => {
+    const sid = typeof l.source === 'object' ? l.source.id : l.source;
+    const tid = typeof l.target === 'object' ? l.target.id : l.target;
+    return (sid === d.id || tid === d.id) ? 0.9 : 0.03;
+  });
+})
+.on("mousemove", (e) => {
+  const rect = container.getBoundingClientRect();
+  let x = e.clientX - rect.left + 15;
+  let y = e.clientY - rect.top - 10;
+  if (x + 320 > rect.width) x = e.clientX - rect.left - 335;
+  if (y + 200 > rect.height) y = e.clientY - rect.top - 200;
+  tooltip.style.left = x + "px";
+  tooltip.style.top = y + "px";
+})
+.on("mouseout", () => {
+  tooltip.classList.remove("visible");
+  node.select("circle").attr("opacity", nodeOpacity);
+  node.selectAll("text").attr("opacity", 1);
+  link.attr("opacity", d => {
+    if (d.type === "product" && d.weight > 0) return 0.7;
+    if (d.type === "referral") return 0.8;
+    return 0.3;
+  });
+});
+
+// ══════════════════════════════════════════════════════
+// FILTER BAR
+// ══════════════════════════════════════════════════════
+
+document.querySelectorAll(".filter-btn").forEach(btn => {
+  btn.addEventListener("click", () => {
+    document.querySelectorAll(".filter-btn").forEach(b => b.classList.remove("active"));
+    btn.classList.add("active");
+    const f = btn.dataset.filter;
+
+    if (f === "all") {
+      node.select("circle").attr("opacity", nodeOpacity);
+      node.selectAll("text").attr("opacity", 1);
+      link.attr("opacity", d => {
+        if (d.type === "product" && d.weight > 0) return 0.7;
+        if (d.type === "referral") return 0.8;
+        return 0.3;
+      });
+    } else {
+      node.select("circle").attr("opacity", d => d.type === f || d.type === "product" ? nodeOpacity(d) : 0.06);
+      node.selectAll("text").attr("opacity", d => d.type === f || d.type === "product" ? 1 : 0.06);
+      link.attr("opacity", d => {
+        const sNode = typeof d.source === 'object' ? d.source : nodes.find(n => n.id === d.source);
+        const tNode = typeof d.target === 'object' ? d.target : nodes.find(n => n.id === d.target);
+        if (sNode && tNode && (sNode.type === f || tNode.type === f)) return 0.7;
+        return 0.03;
+      });
+    }
+  });
+});
+
+// Initial center
+svg.call(zoom.transform, d3.zoomIdentity.translate(width * 0.05, height * 0.05).scale(0.9));
+</script>
+</body>
+</html>

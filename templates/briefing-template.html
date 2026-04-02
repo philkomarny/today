@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script src="auth.js"></script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Daily Briefing — April 1, 2026</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;600;700&family=Fira+Sans:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,600;0,700;1,600&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg-primary: #0B0E1A;
+    --bg-card: #111827;
+    --bg-card-hover: #1a2235;
+    --bg-surface: #0f1629;
+    --border: #1E293B;
+    --border-light: #2a3654;
+    --text-primary: #E2E8F0;
+    --text-secondary: #94A3B8;
+    --text-muted: #64748B;
+    --blue-400: #60A5FA;
+    --blue-500: #3B82F6;
+    --purple-400: #A78BFA;
+    --purple-500: #8B5CF6;
+    --green-400: #4ADE80;
+    --red-400: #F87171;
+    --amber-400: #FBBF24;
+    --cyan-400: #22D3EE;
+    --pink-400: #F472B6;
+    --gradient-blue-purple: linear-gradient(135deg, #3B82F6, #8B5CF6);
+  }
+
+  [data-theme="light"] {
+    --bg-primary: #F8FAFC;
+    --bg-card: #FFFFFF;
+    --bg-card-hover: #F1F5F9;
+    --bg-surface: #F1F5F9;
+    --border: #E2E8F0;
+    --border-light: #CBD5E1;
+    --text-primary: #1E293B;
+    --text-secondary: #475569;
+    --text-muted: #94A3B8;
+    --blue-400: #3B82F6;
+    --blue-500: #2563EB;
+    --purple-400: #8B5CF6;
+    --purple-500: #7C3AED;
+    --green-400: #22C55E;
+    --red-400: #EF4444;
+    --amber-400: #F59E0B;
+    --cyan-400: #06B6D4;
+    --pink-400: #EC4899;
+    --gradient-blue-purple: linear-gradient(135deg, #2563EB, #7C3AED);
+  }
+
+  [data-theme="light"] .nav { background: rgba(248, 250, 252, 0.92); }
+  [data-theme="light"] .nav-menu { background: rgba(255, 255, 255, 0.98); }
+
+  .theme-toggle {
+    background: none;
+    border: 1px solid var(--text-muted);
+    border-radius: 50%;
+    width: 30px;
+    height: 30px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+    transition: border-color 0.2s, color 0.2s;
+  }
+
+  .theme-toggle:hover { border-color: var(--blue-400); color: var(--blue-400); }
+
+  body {
+    font-family: 'Fira Sans', sans-serif;
+    background: var(--bg-primary);
+    color: var(--text-primary);
+    min-height: 100vh;
+    line-height: 1.7;
+  }
+
+  /* NAV */
+  .nav {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: rgba(11, 14, 26, 0.92);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border);
+    padding: 1rem 1.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .nav-page-title {
+    font-family: 'Fira Code', monospace;
+    font-size: 1.4rem;
+    font-weight: 700;
+    background: var(--gradient-blue-purple);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .hamburger {
+    display: flex; flex-direction: column; gap: 4px; cursor: pointer;
+    padding: 0.4rem; border: none; background: none; z-index: 102;
+  }
+  .hamburger span { display: block; width: 20px; height: 2px; background: var(--text-secondary); border-radius: 2px; transition: transform 0.3s, opacity 0.3s; }
+  .hamburger.open span:nth-child(1) { transform: rotate(45deg) translate(4px, 4px); }
+  .hamburger.open span:nth-child(2) { opacity: 0; }
+  .hamburger.open span:nth-child(3) { transform: rotate(-45deg) translate(4px, -4px); }
+
+  .nav-menu {
+    display: none; position: fixed; top: 0; right: 0; width: 220px; height: 100vh;
+    background: rgba(17, 24, 39, 0.98); border-left: 1px solid var(--border);
+    padding: 4rem 1.5rem 2rem; z-index: 101; flex-direction: column; gap: 0.25rem;
+  }
+  .nav-menu.open { display: flex; }
+  .nav-menu a {
+    display: block; padding: 0.5rem 0.75rem; border-radius: 8px;
+    font-family: 'Fira Code', monospace; font-size: 0.75rem; font-weight: 500;
+    text-decoration: none; color: var(--text-secondary); transition: background 0.2s, color 0.2s;
+  }
+  .nav-menu a:hover { background: rgba(96, 165, 250, 0.08); color: var(--blue-400); }
+  .nav-menu a.active { color: var(--blue-400); background: rgba(96, 165, 250, 0.12); }
+
+  .nav-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.4); z-index: 100; }
+  .nav-overlay.open { display: block; }
+
+  /* HERO */
+  .hero {
+    position: relative; padding: 5rem 2rem 4rem; text-align: center; overflow: hidden;
+  }
+  .hero::before {
+    content: ''; position: absolute; top: -40%; left: 50%; transform: translateX(-50%);
+    width: 900px; height: 700px;
+    background: radial-gradient(ellipse, rgba(139,92,246,0.08) 0%, rgba(59,130,246,0.04) 40%, transparent 70%);
+    pointer-events: none;
+  }
+  .hero-date {
+    font-family: 'Fira Code', monospace; font-size: 0.72rem; color: var(--text-muted);
+    letter-spacing: 0.15em; text-transform: uppercase; margin-bottom: 1.5rem;
+  }
+  .hero-quote {
+    font-family: 'Playfair Display', serif; font-size: 2rem; font-weight: 600; font-style: italic;
+    color: var(--text-primary); max-width: 700px; margin: 0 auto 0.75rem; line-height: 1.4;
+  }
+  .hero-attribution { font-size: 0.85rem; color: var(--text-muted); margin-bottom: 2rem; }
+
+  /* CONTENT */
+  .content { max-width: 900px; margin: 0 auto; padding: 0 2rem 4rem; }
+
+  /* SITREP */
+  .sitrep {
+    background: linear-gradient(135deg, rgba(59,130,246,0.06) 0%, rgba(139,92,246,0.06) 100%);
+    border: 1px solid var(--border); border-radius: 16px; padding: 2rem; margin-bottom: 3rem; position: relative;
+  }
+  .sitrep::before {
+    content: 'SITREP'; position: absolute; top: -0.6rem; left: 1.5rem;
+    font-family: 'Fira Code', monospace; font-size: 0.65rem; font-weight: 700;
+    letter-spacing: 0.15em; color: var(--blue-400); background: var(--bg-primary); padding: 0 0.5rem;
+  }
+  .sitrep p { color: var(--text-secondary); font-size: 0.95rem; line-height: 1.8; }
+  .sitrep em { color: var(--amber-400); font-style: normal; font-weight: 600; }
+
+  /* Section dividers */
+  .section { margin-bottom: 3rem; }
+  .section-label {
+    font-family: 'Fira Code', monospace; font-size: 0.65rem; font-weight: 700;
+    letter-spacing: 0.2em; text-transform: uppercase; color: var(--text-muted);
+    margin-bottom: 1.25rem; display: flex; align-items: center; gap: 0.75rem;
+  }
+  .section-label::after { content: ''; flex: 1; height: 1px; background: var(--border); }
+  .section-label .count {
+    font-size: 0.6rem; color: var(--bg-primary); background: var(--text-muted);
+    padding: 0.1rem 0.45rem; border-radius: 999px; font-weight: 700;
+  }
+
+  /* Focus items */
+  .focus-list { list-style: none; counter-reset: focus; }
+  .focus-item { counter-increment: focus; display: flex; gap: 1rem; padding: 1rem 0; border-bottom: 1px solid rgba(30,41,59,0.5); }
+  .focus-item:last-child { border-bottom: none; }
+  .focus-num {
+    font-family: 'Fira Code', monospace; font-size: 1.5rem; font-weight: 700;
+    color: var(--purple-400); opacity: 0.5; min-width: 2rem; line-height: 1; padding-top: 0.2rem;
+  }
+  .focus-item:first-child .focus-num { opacity: 1; }
+  .focus-text strong { color: var(--text-primary); font-weight: 600; }
+  .focus-text { color: var(--text-secondary); font-size: 0.9rem; line-height: 1.7; }
+
+  /* Intel cards */
+  .intel-group { margin-bottom: 2rem; }
+  .intel-group-title {
+    font-family: 'Fira Code', monospace; font-size: 0.75rem; font-weight: 600;
+    color: var(--cyan-400); margin-bottom: 0.75rem; padding-left: 0.5rem; border-left: 2px solid var(--cyan-400);
+  }
+  .intel-card {
+    background: var(--bg-card); border: 1px solid var(--border); border-radius: 12px;
+    padding: 1.25rem 1.5rem; margin-bottom: 0.75rem; transition: border-color 0.2s, background 0.2s;
+  }
+  .intel-card:hover { border-color: var(--border-light); background: var(--bg-card-hover); }
+  .intel-headline { font-weight: 600; font-size: 0.92rem; color: var(--text-primary); margin-bottom: 0.3rem; }
+  .intel-headline a { color: var(--text-primary); text-decoration: none; border-bottom: 1px solid transparent; transition: border-color 0.2s; }
+  .intel-headline a:hover { border-bottom-color: var(--blue-400); }
+  .intel-source { font-family: 'Fira Code', monospace; font-size: 0.62rem; color: var(--text-muted); margin-bottom: 0.5rem; }
+  .intel-body { color: var(--text-secondary); font-size: 0.85rem; line-height: 1.7; }
+  .intel-relevance {
+    margin-top: 0.6rem; font-size: 0.78rem; color: var(--purple-400); font-style: italic;
+    padding-left: 0.75rem; border-left: 2px solid rgba(167, 139, 250, 0.3);
+  }
+
+  .product-tag {
+    display: inline-block; padding: 0.1rem 0.4rem; border-radius: 999px;
+    font-size: 0.58rem; font-family: 'Fira Code', monospace; font-weight: 600;
+    margin-left: 0.3rem; vertical-align: middle;
+  }
+  .tag-product-1 { background: rgba(96,165,250,0.15); color: var(--blue-400); }
+  .tag-angrydata { background: rgba(248,113,113,0.15); color: var(--red-400); }
+  .tag-skillsintel { background: rgba(74,222,128,0.15); color: var(--green-400); }
+  .tag-product-2 { background: rgba(251,191,36,0.15); color: var(--amber-400); }
+  .tag-workforce { background: rgba(167,139,250,0.15); color: var(--purple-400); }
+
+  /* Trend cards */
+  .trend-card {
+    background: var(--bg-card); border: 1px solid var(--border); border-radius: 12px;
+    padding: 1.5rem; margin-bottom: 1rem; position: relative;
+  }
+  .trend-card:hover { border-color: var(--border-light); }
+  .trend-score {
+    position: absolute; top: 1rem; right: 1rem;
+    font-family: 'Fira Code', monospace; font-size: 1.4rem; font-weight: 700; line-height: 1;
+  }
+  .trend-score .out-of { font-size: 0.65rem; color: var(--text-muted); font-weight: 400; }
+  .score-9, .score-10 { color: var(--green-400); }
+  .score-7, .score-8 { color: var(--amber-400); }
+  .trend-name { font-weight: 600; font-size: 0.95rem; color: var(--text-primary); margin-bottom: 0.4rem; padding-right: 3rem; }
+  .trend-body { color: var(--text-secondary); font-size: 0.85rem; line-height: 1.7; margin-bottom: 0.6rem; }
+  .trend-meta { display: flex; flex-wrap: wrap; gap: 0.75rem; font-size: 0.72rem; color: var(--text-muted); }
+  .trend-meta strong { color: var(--text-secondary); }
+
+  .campaign-box {
+    margin-top: 0.75rem; padding: 0.75rem 1rem;
+    background: rgba(139, 92, 246, 0.05); border-radius: 8px;
+    border-left: 2px solid var(--purple-400); font-size: 0.82rem;
+    color: var(--text-secondary); line-height: 1.65;
+  }
+  .campaign-box strong { color: var(--purple-400); }
+
+  /* Convergence */
+  .convergence {
+    background: linear-gradient(135deg, rgba(251,191,36,0.05), rgba(248,113,113,0.05));
+    border: 1px solid rgba(251,191,36,0.2); border-radius: 12px; padding: 1.5rem; margin: 1.5rem 0;
+  }
+  .convergence h4 {
+    font-family: 'Fira Code', monospace; font-size: 0.72rem; font-weight: 700;
+    letter-spacing: 0.1em; color: var(--amber-400); margin-bottom: 0.75rem;
+  }
+  .convergence li { color: var(--text-secondary); font-size: 0.85rem; line-height: 1.7; margin-bottom: 0.5rem; margin-left: 1rem; }
+  .convergence li strong { color: var(--text-primary); }
+
+  /* Legal cards */
+  .legal-card {
+    background: var(--bg-card); border: 1px solid var(--border); border-radius: 10px;
+    padding: 1rem 1.25rem; margin-bottom: 0.6rem;
+  }
+  .legal-card .case-name { font-weight: 600; font-size: 0.88rem; color: var(--text-primary); }
+  .legal-card .jurisdiction { font-family: 'Fira Code', monospace; font-size: 0.62rem; color: var(--text-muted); margin-bottom: 0.3rem; }
+  .legal-card .case-body { color: var(--text-secondary); font-size: 0.82rem; line-height: 1.65; }
+
+  /* Research */
+  .research-card {
+    background: var(--bg-card); border: 1px solid var(--border); border-radius: 10px;
+    padding: 1rem 1.25rem; margin-bottom: 0.6rem;
+  }
+  .research-card .paper-title { font-weight: 600; font-size: 0.88rem; color: var(--text-primary); margin-bottom: 0.3rem; }
+  .research-card .paper-body { color: var(--text-secondary); font-size: 0.82rem; line-height: 1.65; }
+
+  /* Dashboard stats strip */
+  .dashboard-strip {
+    display: grid; grid-template-columns: repeat(5, 1fr); gap: 1px;
+    background: var(--border); border: 1px solid var(--border); border-radius: 12px;
+    overflow: hidden; margin: 2rem 0;
+  }
+  .strip-stat { background: var(--bg-card); padding: 1rem; text-align: center; }
+  .strip-stat .val { font-family: 'Fira Code', monospace; font-size: 1.3rem; font-weight: 700; line-height: 1; margin-bottom: 0.2rem; }
+  .strip-stat .lbl { font-size: 0.6rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.08em; font-family: 'Fira Code', monospace; }
+
+  /* Task overdue */
+  .task-overdue {
+    background: rgba(248,113,113,0.06); border: 1px solid rgba(248,113,113,0.2);
+    border-radius: 10px; padding: 1rem 1.25rem;
+  }
+  .task-overdue strong { color: var(--red-400); }
+  .task-overdue { color: var(--text-secondary); font-size: 0.85rem; }
+
+  /* Footer */
+  .briefing-footer {
+    text-align: center; padding: 2rem; border-top: 1px solid var(--border); margin-top: 2rem;
+  }
+  .briefing-footer .made-with { font-size: 0.7rem; color: var(--text-muted); }
+
+  @media (max-width: 700px) {
+    .hero-quote { font-size: 1.4rem; }
+    .dashboard-strip { grid-template-columns: repeat(3, 1fr); }
+    .content { padding: 0 1rem 3rem; }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav class="nav">
+  <div class="nav-page-title">Daily Briefing</div>
+  <div style="display:flex;align-items:center;gap:0.5rem;">
+    <button class="theme-toggle" id="theme-toggle" aria-label="Toggle theme"></button>
+    <button class="hamburger" id="hamburger" aria-label="Menu">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</nav>
+<div class="nav-overlay" id="nav-overlay"></div>
+<div class="nav-menu" id="nav-menu">
+  <a href="landing.html">Home</a>
+  <a href="briefing.html" class="active">/today</a>
+  <a href="dashboard.html">Dashboard</a>
+  <a href="network.html">Network</a>
+  <a href="social.html">Social</a>
+  <a href="updates.html">Updates</a>
+  <a href="system-diagram.html">System</a>
+</div>
+<script>
+  const hamburger = document.getElementById('hamburger');
+  const navMenu = document.getElementById('nav-menu');
+  const navOverlay = document.getElementById('nav-overlay');
+  hamburger.addEventListener('click', () => { hamburger.classList.toggle('open'); navMenu.classList.toggle('open'); navOverlay.classList.toggle('open'); });
+  navOverlay.addEventListener('click', () => { hamburger.classList.remove('open'); navMenu.classList.remove('open'); navOverlay.classList.remove('open'); });
+  const themeToggle = document.getElementById('theme-toggle');
+  function setTheme(t) { document.documentElement.setAttribute('data-theme', t); themeToggle.textContent = t === 'dark' ? '\u2600' : '\u263E'; localStorage.setItem('theme', t); }
+  setTheme(localStorage.getItem('theme') || 'dark');
+  themeToggle.addEventListener('click', () => { setTheme(document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark'); });
+</script>
+
+<!-- DATA:START -->
+<!-- This section is regenerated each /today run from staging JSONs.
+     Must include:
+     - <div class="hero"> ... </div>
+     - <div class="content"> ... </div>  (opens AND closes here)
+     The data section is responsible for all content between this marker and DATA:END.
+-->
+<!-- DATA:END -->
+
+<!-- FOOTER -->
+<div class="briefing-footer">
+  <div class="made-with">Powered by Get Your Own /today</div>
+</div>
+
+</body>
+</html>

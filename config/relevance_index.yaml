@@ -1,0 +1,16 @@
+# Relevance Index — Source Performance Scoring
+# Auto-managed by the self-update agent. Do not edit manually unless fixing data.
+#
+# Scoring formula:
+#   relevance_score = (decayed_score * 0.6) + (hit_rate * 20 * 0.2) + (min(streak, 10) * 0.2)
+#   decayed_score = sum(points * 0.5^(days_since/7))  [7-day half-life]
+#
+# This file grows over time as sources are tracked across runs.
+
+version: "2.0"
+tracking_start: null    # Set on first run
+total_briefings: 0
+
+intel_sources: {}
+influencers: {}
+companies: {}

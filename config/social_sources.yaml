@@ -1,0 +1,58 @@
+# Social Media Sources for Daily Trend Analysis (Multi-Platform)
+# Monitored via WebFetch/WebSearch during /today — scored for relevance to your mission.
+#
+# Fields:
+#   name:          Display name
+#   platform:      linkedin | x | tiktok | youtube | reddit | substack
+#   url:           Profile or feed URL (or subreddit URL for Reddit)
+#   type:          influencer | company | publication | community
+#   focus:         What they're known for (guides relevance scoring)
+#   tags:          Maps to your mission areas (match mission.yaml slugs)
+#   active:        true/false — toggle without deleting
+#   added:         Date first tracked
+#   discovered_via: How this source was found
+#
+# Platform coverage targets:
+#   LinkedIn: 10+ | X: 8+ | Reddit: 3+ | YouTube: 3+ | TikTok: 2+ | Substack: 3+
+#
+# Trend Score (1-10) is calculated per-post based on:
+#   Relevance (0-4):   How closely it maps to your mission areas
+#   Momentum (0-3):    Engagement velocity — cross-platform presence scores higher
+#   Campaign fit (0-3): Can you credibly attach to or start a campaign around this?
+#
+# The first-run setup wizard populates this with influencers for your domain.
+# The social agent adds 20 new voices per run.
+
+influencers: []
+# Example:
+#   - name: "Thought Leader Name"
+#     platform: linkedin
+#     url: "https://linkedin.com/in/username"
+#     type: influencer
+#     focus: "Known for insights on [topic]"
+#     tags: [relevant-tag]
+#     active: true
+#     added: "2026-04-02"
+#     discovered_via: "First-run setup"
+
+companies: []
+# Example:
+#   - name: "Company Name"
+#     platform: linkedin
+#     url: "https://linkedin.com/company/name"
+#     type: company
+#     focus: "What they do in your space"
+#     tags: [relevant-tag]
+#     active: true
+#     added: "2026-04-02"
+
+communities: []
+# Example:
+#   - name: "r/YourIndustry"
+#     platform: reddit
+#     url: "https://reddit.com/r/yourindustry"
+#     type: community
+#     focus: "Community discussion about [topic]"
+#     tags: [relevant-tag]
+#     active: true
+#     added: "2026-04-02"

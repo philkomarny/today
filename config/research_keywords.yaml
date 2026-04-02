@@ -1,0 +1,23 @@
+# Research Keywords for arXiv Paper Search
+# The research agent uses these to find relevant academic papers.
+#
+# The first-run setup wizard populates these based on your domain.
+# The self-update agent tunes keywords over time:
+#   - Adds keywords that would catch papers referenced in intel stories
+#   - Removes keywords that consistently pull irrelevant results
+
+topics: []
+# Example (populated during first-run setup):
+#
+#   - name: "AI in Your Industry"
+#     keywords:
+#       - "artificial intelligence [your domain]"
+#       - "LLM [your domain] applications"
+#       - "generative AI [your domain]"
+#     sources: [arxiv]
+#
+#   - name: "Core Domain Topic"
+#     keywords:
+#       - "specific research keyword 1"
+#       - "specific research keyword 2"
+#     sources: [arxiv]

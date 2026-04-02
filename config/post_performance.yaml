@@ -1,0 +1,17 @@
+# Social post performance tracking
+# Updated when you publish posts from the dashboard
+# The self-update agent uses this to tune topic targeting and voice
+
+posts: []
+# Example entry:
+#   - date: "2026-04-02"
+#     post_id: "LI-1"
+#     published: true
+#     topic: "topic name"
+#     platform: linkedin
+
+patterns:
+  preferred_length_linkedin: null   # words, learned from published posts
+  preferred_length_twitter: null    # characters
+  preferred_topics: []              # populated as data accumulates
+  avoided_topics: []                # topics you never publish

@@ -1,0 +1,28 @@
+# Calendar Configuration
+# Set up during first-run setup wizard, or edit manually.
+#
+# Supported providers: google, outlook, ics, none
+# The calendar agent reads this to know how to fetch your schedule.
+
+provider: "none"
+# Options:
+#   "google"  — Uses Claude Code's built-in Google Calendar MCP (no extra setup)
+#   "outlook" — Uses Microsoft Graph API (requires Azure app credentials in .env)
+#   "ics"     — Fetches an ICS feed URL (works with Apple Calendar, any ICS provider)
+#   "none"    — Skip calendar (briefing still works, just no schedule section)
+
+# For Google Calendar:
+# google_calendar_ids:
+#   - id: "primary"
+#     label: "Work"
+#   - id: "another-calendar-id@group.calendar.google.com"
+#     label: "Personal"
+
+# For Outlook (credentials go in .env as MS_CLIENT_ID, MS_TENANT_ID, MS_CLIENT_SECRET, MS_USER_EMAIL):
+# outlook_user_email: "you@company.com"
+
+# For ICS feed:
+# ics_url: "https://your-calendar-provider.com/path/to/feed.ics"
+
+timezone: "America/Chicago"
+# Change to your timezone: America/New_York, America/Los_Angeles, Europe/London, etc.

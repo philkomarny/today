@@ -1,0 +1,26 @@
+# Legal & Court Watch search queries
+# Self-updated by the legal agent: queries that find relevant cases get promoted, noise gets demoted.
+# hit_rate and last_hit are updated by the self-update agent after each run.
+#
+# The first-run setup wizard populates these based on your domain.
+
+queries: []
+# Example (populated during first-run setup):
+#
+#   - text: "AI lawsuit court ruling"
+#     scope: "last 7 days"
+#     hit_rate: 0.0
+#     last_hit: null
+#     added: "2026-04-02"
+#
+#   - text: "[your industry] lawsuit court ruling"
+#     scope: "last 7 days"
+#     hit_rate: 0.0
+#     last_hit: null
+#     added: "2026-04-02"
+#
+#   - text: "AI copyright court hearing"
+#     scope: "last 7 days"
+#     hit_rate: 0.0
+#     last_hit: null
+#     added: "2026-04-02"

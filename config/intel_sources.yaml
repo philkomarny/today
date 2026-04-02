@@ -1,0 +1,47 @@
+# Industry Intel Sources
+# Each source is fetched during /today and digested against your mission areas.
+#
+# Fields:
+#   name:          Display name for the briefing
+#   url:           URL to fetch (homepage or feed index)
+#   type:          substack | blog | rss | news
+#   tags:          Which of your focus areas this source covers (match mission.yaml slugs)
+#   active:        true/false — toggle sources on/off without deleting
+#   fetch_method:  scrape (default) | websearch (for sites that block scraping)
+#   added:         Date first tracked
+#   discovered_via: How this source was found
+#
+# The first-run setup wizard populates this with sources for your domain.
+# The self-update agent adds 5 new sources per run and pauses failing ones.
+#
+# Dedup: The intel agent reads the previous day's briefing to avoid
+# repeating stories already covered.
+
+# Theme groupings for organizing stories in the briefing
+# (customize these to match your domain)
+themes:
+  - "AI & Technology"
+  - "Industry News"
+  - "Policy & Regulation"
+  - "Market & Business"
+  - "Global"
+
+sources: []
+# Example entries (populated during first-run setup):
+#
+#   - name: "TechCrunch"
+#     url: "https://techcrunch.com/"
+#     type: news
+#     tags: [ai, startups, technology]
+#     active: true
+#     added: "2026-04-02"
+#     discovered_via: "First-run setup"
+#
+#   - name: "Industry Blog"
+#     url: "https://example-industry-blog.com/"
+#     type: blog
+#     tags: [industry-specific-tag]
+#     active: true
+#     fetch_method: websearch
+#     added: "2026-04-02"
+#     discovered_via: "First-run setup"

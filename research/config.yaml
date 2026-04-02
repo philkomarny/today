@@ -1,0 +1,11 @@
+# Research configuration — mirrors config/research_keywords.yaml
+# This file is read by the research_search.py script.
+# Populated during first-run setup.
+
+topics: []
+# Example:
+#   - name: "AI in Your Industry"
+#     keywords:
+#       - "artificial intelligence [your domain]"
+#       - "LLM [your domain]"
+#     sources: [arxiv]
