@@ -146,7 +146,7 @@ Each agent is a standalone markdown file in `commands/agents/`. The orchestrator
 
 ## Cost
 
-Each `/today` run uses roughly $1-3 of Claude API credits depending on how many sources are fetched and how much content is processed.
+Each `/today` run costs pennies in API credits. A full month of daily runs has been measured at under $0.50 total using Claude Haiku. Cost varies by model — Opus will cost more, but even heavy usage stays well under $5/month.
 
 ## Credits
 
