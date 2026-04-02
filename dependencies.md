@@ -93,4 +93,4 @@ The first-run setup will prompt you to approve these as needed.
 
 ## Cost
 
-Each `/today` run uses roughly **$2-4** of Claude API credits depending on source count and content volume.
+Each `/today` run uses roughly **$1-3 of Claude API credits depending on source count and content volume.
