@@ -110,6 +110,34 @@ While running, you see a live status display:
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 ```
 
+## Recommended Setup: Obsidian + Claude Code Sidebar
+
+This system works anywhere Claude Code runs. But the optimal setup is inside an [Obsidian](https://obsidian.md) vault with the Claude Code sidebar extension.
+
+**Why Obsidian:**
+- Your daily briefings are markdown files — Obsidian renders them beautifully with wikilinks, tags, and backlinks
+- Research papers, social posts, and briefings all cross-reference each other via `[[wikilinks]]`
+- The briefing becomes part of your knowledge graph, not a throwaway document
+- Inspiration images embed inline with `![[image.png]]`
+- Tasks, wins, and ops logs are just markdown files you can search, link, and organize
+
+**Why the Claude Code sidebar:**
+- Run `/today` without leaving your vault — the sidebar opens Claude Code right inside Obsidian
+- Watch the mission board update in real time while you read yesterday's briefing
+- Click through from the briefing to social posts, dashboard HTML, or config files without switching apps
+- Edit your `voice.md` or `mission.yaml` in one pane, run `/today` in the other
+
+**Setup:**
+1. Install [Obsidian](https://obsidian.md) and create a vault (or use an existing one)
+2. Install the Claude Code sidebar extension from Obsidian's community plugins
+3. Drop `daily-briefing/` into your vault folder
+4. Copy `.claude/commands/today.md` to your vault's `.claude/commands/`
+5. Open the Claude Code sidebar and type `/today`
+
+Your briefings accumulate as daily notes. Your configs evolve over time. Your research papers build a library. It's not just a briefing system — it becomes your second brain's morning routine.
+
+Not required. Just optimal.
+
 ## Customization
 
 ### Change your domain
